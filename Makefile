@@ -12,3 +12,6 @@ infra-shutdown:
 
 infra-restart:
 	docker-compose -f ./infra/docker-compose.yml restart
+
+connect-source-db:
+	docker exec -it log_based_postgres psql -U "meltano" -d "meltano"
