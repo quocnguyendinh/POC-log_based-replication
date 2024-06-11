@@ -1,10 +1,10 @@
 #!/bin/bash
 
 # Update and upgrade the system packages
-apt-get update && apt-get upgrade -y
+sudo apt-get update && sudo apt-get upgrade -y
 
 # Install git
-apt-get install -y git make
+sudo apt-get install -y git make postgresql-client
 
 # Clone the asdf repository
 git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.14.0

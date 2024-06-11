@@ -14,13 +14,6 @@ RUN apt-get update && \
     
 ENV PATH="/usr/lib/postgresql/15/bin:${PATH}"
 
-# Copy the custom configuration file
-COPY custom-postgresql.conf /docker-entrypoint-initdb.d/custom-postgresql.conf
-
-# Copy the initialization script
-COPY init-db.sh /docker-entrypoint-initdb.d/init-db.sh
-RUN chmod +x /docker-entrypoint-initdb.d/init-db.sh
-
 # Expose the default PostgreSQL port
 EXPOSE 5432
 
