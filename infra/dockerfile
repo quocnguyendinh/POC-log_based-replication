@@ -1,0 +1,27 @@
+# Use the official PostgreSQL image as a base
+FROM postgres:15
+
+# Install necessary packages
+RUN apt-get update && \
+    apt-get upgrade -y && \
+    apt-get install -y curl ca-certificates && \
+    install -d /usr/share/postgresql-common/pgdg && \
+    curl -o /usr/share/postgresql-common/pgdg/apt.postgresql.org.asc --fail https://www.postgresql.org/media/keys/ACCC4CF8.asc && \
+    sh -c 'echo "deb [signed-by=/usr/share/postgresql-common/pgdg/apt.postgresql.org.asc] https://apt.postgresql.org/pub/repos/apt bookworm-pgdg main" > /etc/apt/sources.list.d/pgdg.list' && \
+    apt-get update -y && \
+    apt-get install -y postgresql-server-dev-15 postgresql-15-wal2json && \
+    rm -rf /var/lib/apt/lists/*
+    
+ENV PATH="/usr/lib/postgresql/15/bin:${PATH}"
+
+# Copy the custom configuration file
+COPY custom-postgresql.conf /docker-entrypoint-initdb.d/custom-postgresql.conf
+
+# Copy the initialization script
+COPY init-db.sh /docker-entrypoint-initdb.d/init-db.sh
+RUN chmod +x /docker-entrypoint-initdb.d/init-db.sh
+
+# Expose the default PostgreSQL port
+EXPOSE 5432
+
+CMD ["postgres"]
