@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "poc-log-based-replication"
+version = "0.1.0"
+description = "This is the POC of the log-based replication using tap-postgres."
+authors = ["Quoc Nguyen Dinh"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = ">=3.9"
+meltano = "^3.4.2"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

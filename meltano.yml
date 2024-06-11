@@ -1,0 +1,17 @@
+default_environment: dev
+
+plugins:
+  extractor:
+    - name: tap-postgres
+      variant: meltanolabs
+      pip_url: git+https://github.com/MeltanoLabs/tap-postgres.git
+  
+  loader:
+    - name: target-clickhouse
+      variant: shaped-ai
+      pip_url: git+https://github.com/shaped-ai/target-clickhouse.git
+
+  mapper:
+    - name: meltano-map-transformer
+      variant: meltano
+      pip_url: git+https://github.com/MeltanoLabs/meltano-map-transform.git@v0.7.1

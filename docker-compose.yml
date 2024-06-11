@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  postgres:
+    build: .
+    container_name: log_based_postgres
+    environment:
+      POSTGRES_USER: meltano
+      POSTGRES_PASSWORD: meltano
+      POSTGRES_DB: meltano
+    ports:
+      - "5432:5432"
+  
+  clickhouse:
+    image: bitnami/clickhouse:latest
+    container_name: clickhouse
+    ports:
+      - "8123:8123"
+      - "9000:9000"
+    
