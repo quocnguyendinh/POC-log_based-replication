@@ -22,6 +22,14 @@ plugins:
     config:
       table_name: sample
       database: meltano
+  
+  - name: target-duckdb
+    variant: jwills
+    pip_url: git+https://github.com/jwills/target-duckdb.git
+    config:
+      path: ../infra/data_warehouse.duckdb
+      add_metadata_columns: true
+      hard_delete: false
 
 environments:
 - name: dev
@@ -44,3 +52,7 @@ environments:
           username: meltano
           password: meltano
           load_method: upsert
+          hard_delete: true
+          add_record_metadata: true
+      
+      - name: target-duckdb

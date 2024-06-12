@@ -5,9 +5,13 @@ infra-down:
 	docker-compose -f ./infra/docker-compose.yml stop
 
 infra-init: infra-up
+	cd infra && bash ./duck-db-setup.sh
+	cd meltano && poetry run meltano install
 	bash ./infra/setup.sh 
 
 infra-shutdown:
+	find infra -type f -name "*duckdb*" -delete
+	cd meltano && rm -rf .meltano/meltano.db
 	docker-compose -f ./infra/docker-compose.yml down
 
 infra-restart:
