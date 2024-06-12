@@ -30,3 +30,5 @@ python -m pip install --upgrade pip && \
 pip install poetry
 
 python -m poetry run poetry install
+python -m poetry run meltano lock --update --all
+python -m poetry run meltano install

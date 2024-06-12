@@ -11,6 +11,7 @@ services:
     volumes:
       - ./custom-postgresql.conf:/docker-entrypoint-initdb.d/custom-postgresql.conf
       - ./init-db.sh:/docker-entrypoint-initdb.d/init-db.sh
+
   
   clickhouse:
     image: bitnami/clickhouse:latest
@@ -21,4 +22,3 @@ services:
     environment:
       CLICKHOUSE_ADMIN_USER: meltano
       CLICKHOUSE_ADMIN_PASSWORD: meltano
-    

@@ -1,0 +1,46 @@
+version: 1
+default_environment: dev
+project_id: 1633e02a-9fcf-486b-b8b1-87cef4258fff
+
+plugins:
+  extractors:
+  - name: tap-postgres
+    variant: meltanolabs
+    pip_url: git+https://github.com/MeltanoLabs/tap-postgres.git
+    select:
+      - public-sample.*
+    filter_schemas: ["public"]
+    metadata:
+      '*':
+        replication-method: LOG_BASED
+        replication_key: _sdc_lsn
+
+  loaders:
+  - name: target-clickhouse
+    variant: shaped-ai
+    pip_url: git+https://github.com/shaped-ai/target-clickhouse.git
+    config:
+      table_name: sample
+      database: meltano
+
+environments:
+- name: dev
+  config:
+    plugins:
+      extractors:
+      - name: tap-postgres
+        config:
+          host: localhost
+          port: 5433
+          user: meltano
+          password: meltano
+          database: meltano
+
+      loaders:
+      - name: target-clickhouse
+        config:
+          host: localhost
+          port: 8123
+          username: meltano
+          password: meltano
+          load_method: upsert

@@ -3,6 +3,8 @@
 # Set environment variables
 export POSTGRES_USER=meltano
 export POSTGRES_DB=meltano
+export CLICKHOUSE_USER=meltano
+export CLICKHOUSE_PASS=meltano
 
 # Restart the PostgreSQL container
 docker restart log_based_postgres
@@ -17,7 +19,6 @@ docker exec -it log_based_postgres psql -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c
 docker exec -it log_based_postgres psql -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "
 CREATE TABLE IF NOT EXISTS sample (
     id SERIAL PRIMARY KEY,
-    uuid INTEGER GENERATED ALWAYS AS IDENTITY,
     text_field TEXT,
     nested_json JSONB
 );
@@ -30,3 +31,5 @@ VALUES
     ('cat', '{"type": "animal", "subtype": {"type": "mammal"}}'),
     ('dog', '{"type": "animal"}');
 EOF
+
+docker exec -it clickhouse clickhouse-client -u $CLICKHOUSE_USER --password $CLICKHOUSE_PASS -q "CREATE DATABASE meltano;" 
