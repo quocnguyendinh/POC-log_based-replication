@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Update and upgrade the system packages
-apt-get update && apt-get upgrade -y
+sudo apt-get update && sudo apt-get upgrade -y
 
 # Install git
 apt-get install -y git make postgresql-client
@@ -29,4 +29,6 @@ asdf global python 3.9.0
 python -m pip install --upgrade pip && \
 pip install poetry
 
-python -m poetry run poetry install
+poetry env use python3.9
+
+poetry run poetry install
