@@ -17,8 +17,11 @@ infra-shutdown:
 infra-restart:
 	docker-compose -f ./infra/docker-compose.yml restart
 
-connect-source-db:
+connect-postgres:
 	docker exec -it log_based_postgres psql -U "meltano" -d "meltano"
 
-connect-data-warehouse:
+connect-clickhouse:
 	docker exec -it clickhouse clickhouse-client -u meltano --password meltano --database meltano
+
+connect-duckdb:
+	duckdb infra/data_warehouse.duckdb
