@@ -1,0 +1,264 @@
+{
+  "plugin_type": "loaders",
+  "name": "target-redshift",
+  "namespace": "target_redshift",
+  "variant": "transferwise",
+  "label": "Amazon Redshift",
+  "docs": "https://hub.meltano.com/loaders/target-redshift--transferwise",
+  "repo": "https://github.com/transferwise/pipelinewise-target-redshift",
+  "pip_url": "pipelinewise-target-redshift",
+  "executable": "target-redshift",
+  "description": "Amazon Redshift loader",
+  "logo_url": "https://hub.meltano.com/assets/logos/loaders/redshift.png",
+  "capabilities": [
+    "activate-version",
+    "datatype-failsafe",
+    "hard-delete",
+    "record-flattening",
+    "soft-delete"
+  ],
+  "settings_group_validation": [
+    [
+      "aws_profile",
+      "dbname",
+      "default_target_schema",
+      "host",
+      "password",
+      "port",
+      "s3_bucket",
+      "user"
+    ],
+    [
+      "aws_access_key_id",
+      "aws_secret_access_key",
+      "dbname",
+      "default_target_schema",
+      "host",
+      "password",
+      "port",
+      "s3_bucket",
+      "user"
+    ],
+    [
+      "aws_session_token",
+      "dbname",
+      "default_target_schema",
+      "host",
+      "password",
+      "port",
+      "s3_bucket",
+      "user"
+    ]
+  ],
+  "settings": [
+    {
+      "name": "add_metadata_columns",
+      "kind": "boolean",
+      "value": false,
+      "label": "Add Metdata Columns",
+      "description": "Metadata columns add extra row level information about data ingestions,\n(i.e. when was the row read in source, when was inserted or deleted in redshift\netc.) Metadata columns are creating automatically by adding extra columns to the\ntables with a column prefix `_SDC_`.\n\nThe metadata columns are documented at https://transferwise.github.io/pipelinewise/data_structure/sdc-columns.html.\nEnabling metadata columns will flag the deleted rows by setting the _SDC_DELETED_AT\nmetadata column.\n\nWithout the `add_metadata_columns` option the deleted rows from\nsinger taps will not be recongisable in Redshift.\n"
+    },
+    {
+      "name": "aws_access_key_id",
+      "kind": "string",
+      "label": "AWS S3 Access Key ID",
+      "description": "S3 Access Key Id. Used for S3 and Redshift copy operations. If not provided, `AWS_ACCESS_KEY_ID` environment variable will be used.",
+      "sensitive": true
+    },
+    {
+      "name": "aws_profile",
+      "label": "AWS Profile Name",
+      "description": "AWS profile name for profile based authentication. If not provided, `AWS_PROFILE` environment variable will be used."
+    },
+    {
+      "name": "aws_redshift_copy_role_arn",
+      "label": "AWS Redshift COPY role ARN",
+      "description": "AWS Role ARN to be used for the Redshift COPY operation. Used instead of the given AWS keys for the COPY operation if provided - the keys are still used for other S3 operations"
+    },
+    {
+      "name": "aws_secret_access_key",
+      "kind": "string",
+      "label": "AWS S3 Secret Access Key",
+      "description": "S3 Secret Access Key. Used for S3 and Redshift copy operations. If not provided, `AWS_SECRET_ACCESS_KEY` environment variable will be used.",
+      "sensitive": true
+    },
+    {
+      "name": "aws_session_token",
+      "kind": "string",
+      "label": "AWS S3 Session Token",
+      "description": "S3 AWS STS token for temporary credentials. If not provided, `AWS_SESSION_TOKEN` environment variable will be used.",
+      "sensitive": true
+    },
+    {
+      "name": "batch_size_rows",
+      "kind": "integer",
+      "value": 100000,
+      "label": "Batch Size Rows",
+      "description": "Maximum number of rows in each batch. At the end of each batch, the rows in the batch are loaded into Redshift."
+    },
+    {
+      "name": "compression",
+      "kind": "options",
+      "label": "Compression",
+      "description": "The compression method to use when writing files to S3 and running Redshift COPY.",
+      "options": [
+        {
+          "label": "gzip",
+          "value": "gzip"
+        },
+        {
+          "label": "bzip2",
+          "value": "bzip2"
+        },
+        {
+          "label": "None",
+          "value": ""
+        }
+      ]
+    },
+    {
+      "name": "copy_options",
+      "value": "EMPTYASNULL BLANKSASNULL TRIMBLANKS TRUNCATECOLUMNS TIMEFORMAT 'auto' COMPUPDATE OFF STATUPDATE OFF",
+      "label": "COPY options",
+      "description": "Parameters to use in the COPY command when loading data to Redshift.\n\nSome basic file formatting parameters are fixed values and not recommended overriding them by custom values.\nThey are like: `CSV GZIP DELIMITER ',' REMOVEQUOTES ESCAPE`.\n"
+    },
+    {
+      "name": "data_flattening_max_level",
+      "kind": "integer",
+      "value": 0,
+      "label": "Data Flattening Max Level",
+      "description": "Object type `RECORD` items from taps can be loaded into VARIANT columns as JSON (default) or we can flatten the schema by creating columns automatically. When value is 0 (default) then flattening functionality is turned off."
+    },
+    {
+      "name": "dbname",
+      "label": "Database Name",
+      "description": "Redshift database name"
+    },
+    {
+      "name": "default_target_schema",
+      "value": "$MELTANO_EXTRACT__LOAD_SCHEMA",
+      "label": "Default Target Schema",
+      "description": "Note `$MELTANO_EXTRACT__LOAD_SCHEMA` [will expand to](https://docs.meltano.com/guide/configuration.html#expansion-in-setting-values) the value of the [`load_schema` extra](https://docs.meltano.com/concepts/plugins#load-schema-extra) for the extractor used in the pipeline, which defaults to the extractor's namespace, e.g. `tap_gitlab` for [`tap-gitlab`](/extractors/gitlab).\n\nName of the schema where the tables will be created. If `schema_mapping`\nis not defined then every stream sent by the tap is loaded into this schema.\n"
+    },
+    {
+      "name": "default_target_schema_select_permissions",
+      "label": "Default Target Schema Select Permission",
+      "description": "Grant USAGE privilege on newly created schemas and grant SELECT privilege on newly created tables to a specific list of users or groups. If `schema_mapping` is not defined then every stream sent by the tap is granted accordingly."
+    },
+    {
+      "name": "disable_table_cache",
+      "kind": "boolean",
+      "value": false,
+      "label": "Disable Table Cache",
+      "description": "By default the connector caches the available table structures in Redshift at startup. In this way it doesn't need to run additional queries when ingesting data to check if altering the target tables is required. With `disable_table_cache` option you can turn off this caching. You will always see the most recent table structures but will cause an extra query runtime."
+    },
+    {
+      "name": "flush_all_streams",
+      "kind": "boolean",
+      "value": false,
+      "label": "Flush All Streams",
+      "description": "Flush and load every stream into Redshift when one batch is full. Warning - This may trigger the COPY command to use files with low number of records, and may cause performance problems."
+    },
+    {
+      "name": "hard_delete",
+      "kind": "boolean",
+      "value": false,
+      "label": "Hard Delete",
+      "description": "When `hard_delete` option is true then DELETE SQL commands will be performed in Redshift to delete rows in tables. It's achieved by continuously checking the `_SDC_DELETED_AT` metadata column sent by the singer tap. Due to deleting rows requires metadata columns, `hard_delete` option automatically enables the `add_metadata_columns` option as well."
+    },
+    {
+      "name": "host",
+      "label": "Host",
+      "description": "Redshift host"
+    },
+    {
+      "name": "max_parallelism",
+      "kind": "integer",
+      "value": 16,
+      "label": "Max Parallelism",
+      "description": "Max number of parallel threads to use when flushing tables."
+    },
+    {
+      "name": "parallelism",
+      "kind": "integer",
+      "value": 0,
+      "label": "Parallelism",
+      "description": "The number of threads used to flush tables. 0 will create a thread for each stream, up to parallelism_max. -1 will create a thread for each CPU core. Any other positive number will create that number of threads, up to parallelism_max."
+    },
+    {
+      "name": "password",
+      "kind": "string",
+      "label": "Password",
+      "description": "Redshift password",
+      "sensitive": true
+    },
+    {
+      "name": "port",
+      "kind": "integer",
+      "value": 5439,
+      "label": "Port",
+      "description": "Redshift port"
+    },
+    {
+      "name": "primary_key_required",
+      "kind": "boolean",
+      "value": true,
+      "label": "Primary Key Required",
+      "description": "Log based and Incremental replications on tables with no Primary Key cause duplicates when merging UPDATE events. When set to true, stop loading data if no Primary Key is defined."
+    },
+    {
+      "name": "s3_acl",
+      "label": "AWS S3 ACL",
+      "description": "S3 Object ACL"
+    },
+    {
+      "name": "s3_bucket",
+      "label": "S3 Bucket name",
+      "description": "AWS S3 bucket name"
+    },
+    {
+      "name": "s3_key_prefix",
+      "label": "S3 Key Prefix",
+      "description": "A static prefix before the generated S3 key names. Using prefixes you can upload files into specific directories in the S3 bucket. Default(None)"
+    },
+    {
+      "name": "schema_mapping",
+      "kind": "object",
+      "label": "Scema Mapping",
+      "description": "Useful if you want to load multiple streams from one tap to multiple\nRedshift schemas.\n\nIf the tap sends the `stream_id` in `<schema_name>-<table_name>`\nformat then this option overwrites the `default_target_schema` value.\n\nNote, that using `schema_mapping` you can overwrite the `default_target_schema_select_permissions`\nvalue to grant SELECT permissions to different groups per schemas or optionally\nyou can create indices automatically for the replicated tables.\n"
+    },
+    {
+      "name": "skip_updates",
+      "kind": "boolean",
+      "value": false,
+      "label": "Skip Updates",
+      "description": "Do not update existing records when Primary Key is defined. Useful to improve performance when records are immutable, e.g. events"
+    },
+    {
+      "name": "slices",
+      "kind": "integer",
+      "value": 1,
+      "label": "Slices",
+      "description": "The number of slices to split files into prior to running COPY on Redshift. This should be set to the number of Redshift slices. The number of slices per node depends on the node size of the cluster - run SELECT COUNT(DISTINCT slice) slices FROM stv_slices to calculate this. Defaults to 1."
+    },
+    {
+      "name": "temp_dir",
+      "label": "Temp Directory",
+      "description": "(Default: platform-dependent) Directory of temporary CSV files with RECORD messages."
+    },
+    {
+      "name": "user",
+      "label": "User name",
+      "description": "Redshift user name"
+    },
+    {
+      "name": "validate_records",
+      "kind": "boolean",
+      "value": false,
+      "label": "Validate Records",
+      "description": "Validate every single record message to the corresponding JSON schema. This option is disabled by default and invalid `RECORD` messages will fail only at load time by Redshift. Enabling this option will detect invalid records earlier but could cause performance degradation."
+    }
+  ],
+  "dialect": "redshift",
+  "target_schema": "$TARGET_REDSHIFT_DEFAULT_TARGET_SCHEMA"
+}

@@ -1,7 +1,7 @@
 # POC-log_based-replication
 This is the POC for the log-based replication using the Meltano Tap-Postgres. 
 
-Environment for testing: `Linux`.
+Environment for testing: `Linux`, `Mac OS` but stable on `Linux`
 
 ## Steps to run:
 

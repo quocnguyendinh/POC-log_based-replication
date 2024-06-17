@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Update and upgrade the system packages
-sudo apt-get update && sudo apt-get upgrade -y
+apt-get update && apt-get upgrade -y
 
 # Install git
 apt-get install -y git make postgresql-client

@@ -6,7 +6,7 @@ infra-down:
 
 infra-init: infra-up
 	cd infra && bash ./duck-db-setup.sh
-	cd meltano && poetry run meltano install
+	cd meltano && poetry run meltano install -f
 	bash ./infra/setup.sh 
 
 infra-shutdown:
