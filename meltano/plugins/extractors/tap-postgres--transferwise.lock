@@ -1,0 +1,112 @@
+{
+  "plugin_type": "extractors",
+  "name": "tap-postgres",
+  "namespace": "tap_postgres",
+  "variant": "transferwise",
+  "label": "PostgreSQL",
+  "docs": "https://hub.meltano.com/extractors/tap-postgres--transferwise",
+  "repo": "https://github.com/transferwise/pipelinewise-tap-postgres",
+  "pip_url": "pipelinewise-tap-postgres",
+  "description": "PostgreSQL database extractor",
+  "logo_url": "https://hub.meltano.com/assets/logos/extractors/postgres.png",
+  "capabilities": [
+    "catalog",
+    "discover",
+    "state"
+  ],
+  "settings_group_validation": [
+    [
+      "dbname",
+      "host",
+      "password",
+      "port",
+      "user"
+    ]
+  ],
+  "settings": [
+    {
+      "name": "break_at_end_lsn",
+      "kind": "boolean",
+      "value": true,
+      "label": "Break At End LSN",
+      "description": "Stop running the tap if the newly received lsn is after the max lsn that was detected when the tap started"
+    },
+    {
+      "name": "dbname",
+      "label": "Database Name",
+      "description": "PostgreSQL database name"
+    },
+    {
+      "name": "default_replication_method",
+      "kind": "options",
+      "label": "Default Replication Method",
+      "description": "The prefered replication method.\n\nNote:\n- Key-based incremental (`INCREMENTAL`) requires configuring a `replication_key` column within the\n  catalog's stream definitions for each supported stream.\n- Requirements and setup instructions for log-based incremental (`LOG_BASED`) are documented\n  [here](https://github.com/transferwise/pipelinewise-tap-postgres#log-based-replication-requirements).\n",
+      "options": [
+        {
+          "label": "Log-based Incremental Replication",
+          "value": "LOG_BASED"
+        },
+        {
+          "label": "Key-based Incremental Replication",
+          "value": "INCREMENTAL"
+        },
+        {
+          "label": "Full Table Replication",
+          "value": "FULL_TABLE"
+        }
+      ]
+    },
+    {
+      "name": "filter_schemas",
+      "label": "Filter Schemas",
+      "description": "Scan only the specified comma-separated schemas to improve the performance of data extraction"
+    },
+    {
+      "name": "host",
+      "value": "localhost",
+      "label": "Host",
+      "description": "PostgreSQL host"
+    },
+    {
+      "name": "logical_poll_total_seconds",
+      "kind": "integer",
+      "value": 10800,
+      "label": "Logical Poll Total Seconds",
+      "description": "Stop running the tap when no data received from wal after certain number of seconds"
+    },
+    {
+      "name": "max_run_seconds",
+      "kind": "integer",
+      "value": 43200,
+      "label": "Max Run Seconds",
+      "description": "Stop running the tap after certain number of seconds"
+    },
+    {
+      "name": "password",
+      "kind": "string",
+      "label": "Password",
+      "description": "PostgreSQL password",
+      "sensitive": true
+    },
+    {
+      "name": "port",
+      "kind": "integer",
+      "value": 5432,
+      "label": "Port",
+      "description": "PostgreSQL port"
+    },
+    {
+      "name": "ssl",
+      "kind": "boolean",
+      "value": false,
+      "label": "SSL",
+      "description": "Using SSL via postgres `sslmode='require'` option. If the server does not accept SSL connections or the client certificate is not recognized the connection will fail",
+      "value_post_processor": "stringify"
+    },
+    {
+      "name": "user",
+      "label": "User",
+      "description": "PostgreSQL user"
+    }
+  ]
+}

@@ -14,6 +14,20 @@ plugins:
       '*':
         replication-method: LOG_BASED
         replication_key: _sdc_lsn
+  
+  - name: tap-postgres-ascenda
+    inherit_from: tap-postgres
+    variant: transferwise
+    pip_url: git+https://github.com/Kaligo/pipelinewise-tap-postgres
+    select:
+      - public-sample.*
+    config:
+      filter_schemas: public
+      skip_last_n_seconds: 60
+    metadata:
+      '*':
+        replication-method: INCREMENTAL
+        replication-key: updated_at
 
   loaders:
   - name: target-clickhouse
@@ -48,7 +62,7 @@ plugins:
       add_metadata_columns: true
       compression: gzip
       slices: 4  # must match `SELECT COUNT(DISTINCT slice) FROM stv_slices`
-      hard_delete: true
+      hard_delete: false
 
 environments:
 - name: dev
@@ -62,6 +76,14 @@ environments:
           user: meltano
           password: meltano
           database: meltano
+
+      - name: tap-postgres-ascenda
+        config:
+          host: localhost
+          port: 5433
+          user: meltano
+          password: meltano
+          dbname: meltano
 
       loaders:
       - name: target-clickhouse

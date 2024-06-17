@@ -25,3 +25,27 @@ connect-clickhouse:
 
 connect-duckdb:
 	duckdb infra/data_warehouse.duckdb
+
+tap-ascenda-replicate-data:
+	sleep 60
+	cd ./meltano && meltano run tap-postgres-ascenda target-redshift
+
+tap-default-replicate-data:
+	cd ./meltano && meltano run tap-postgres target-redshift
+
+test-transaction-first-record-tap-ascenda:
+	bash ./meltano/testing/transaction_first_record.sh
+	make tap-ascenda-replicate-data
+
+test-transaction-first-record-tap-default:
+	bash ./meltano/testing/transaction_first_record.sh
+	make tap-default-replicate-data
+
+test-transaction-second-record-tap-ascenda:
+	bash ./meltano/testing/transaction_second_record.sh
+	make tap-ascenda-replicate-data
+
+test-transaction-second-record-tap-default:
+	bash ./meltano/testing/transaction_second_record.sh
+	make tap-default-replicate-data
+

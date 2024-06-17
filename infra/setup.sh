@@ -20,7 +20,8 @@ docker exec -it log_based_postgres psql -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c
 CREATE TABLE IF NOT EXISTS sample (
     id SERIAL PRIMARY KEY,
     text_field TEXT,
-    nested_json JSONB
+    nested_json JSONB,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 "
 
@@ -32,4 +33,4 @@ VALUES
     ('dog', '{"type": "animal"}');
 EOF
 
-docker exec -it clickhouse clickhouse-client -u $CLICKHOUSE_USER --password $CLICKHOUSE_PASS -q "CREATE DATABASE meltano;" 
+docker exec -it clickhouse clickhouse-client -u $CLICKHOUSE_USER --password $CLICKHOUSE_PASS -q "CREATE DATABASE meltano;"
