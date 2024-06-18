@@ -4,30 +4,30 @@ project_id: 1633e02a-9fcf-486b-b8b1-87cef4258fff
 
 plugins:
   extractors:
-  - name: tap-postgres
-    variant: meltanolabs
-    pip_url: git+https://github.com/MeltanoLabs/tap-postgres.git
-    select:
-      - public-sample.*
-    filter_schemas: ["public"]
-    metadata:
-      '*':
-        replication-method: LOG_BASED
-        replication_key: _sdc_lsn
-  
-  - name: tap-postgres-ascenda
-    inherit_from: tap-postgres
-    variant: transferwise
-    pip_url: git+https://github.com/Kaligo/pipelinewise-tap-postgres
-    select:
-      - public-sample.*
-    config:
-      filter_schemas: public
-      skip_last_n_seconds: 60
-    metadata:
-      '*':
-        replication-method: INCREMENTAL
-        replication-key: updated_at
+    - name: tap-postgres
+      variant: meltanolabs
+      pip_url: git+https://github.com/MeltanoLabs/tap-postgres.git
+      select:
+        - public-sample.*
+      filter_schemas: ["public"]
+      metadata:
+        '*':
+          replication-method: LOG_BASED
+          replication_key: _sdc_lsn
+
+    - name: tap-postgres-ascenda
+      inherit_from: tap-postgres
+      variant: transferwise
+      pip_url: git+https://github.com/Kaligo/pipelinewise-tap-postgres
+      select:
+        - public-sample.*
+      config:
+        filter_schemas: public
+        skip_last_n_seconds: 60
+      metadata:
+        '*':
+          replication-method: INCREMENTAL
+          replication-key: updated_at
 
   loaders:
   - name: target-clickhouse

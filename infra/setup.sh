@@ -16,21 +16,6 @@ sleep 10
 docker exec -it log_based_postgres psql -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "SELECT * FROM pg_create_logical_replication_slot('tappostgres', 'wal2json');"
 
 # Create the sample table
-docker exec -it log_based_postgres psql -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "
-CREATE TABLE IF NOT EXISTS sample (
-    id SERIAL PRIMARY KEY,
-    text_field TEXT,
-    nested_json JSONB,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-"
-
-# Insert sample data into the sample table
-docker exec -i log_based_postgres psql -U "$POSTGRES_USER" -d "$POSTGRES_DB" << EOF
-INSERT INTO sample (text_field, nested_json)
-VALUES
-    ('cat', '{"type": "animal", "subtype": {"type": "mammal"}}'),
-    ('dog', '{"type": "animal"}');
-EOF
+bash postgres/refresh_data.sh
 
 docker exec -it clickhouse clickhouse-client -u $CLICKHOUSE_USER --password $CLICKHOUSE_PASS -q "CREATE DATABASE meltano;"
