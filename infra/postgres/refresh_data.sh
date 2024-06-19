@@ -1,6 +1,3 @@
-export POSTGRES_USER=meltano
-export POSTGRES_DB=meltano
-
 # Insert sample data into the sample table
 docker exec -i log_based_postgres psql -U "$POSTGRES_USER" -d "$POSTGRES_DB" << EOF
 DROP TABLE IF EXISTS sample;
