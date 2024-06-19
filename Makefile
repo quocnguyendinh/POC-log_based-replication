@@ -41,6 +41,9 @@ postgres-revoke-select-permission:
 postgres-revoke-replication-permission:
 	bash ./infra/postgres/revoke_replication_permission.sh
 
+postgres-add-table:
+	bash ./infra/postgres/add_table.sh
+
 tap-ascenda-replicate-data:
 	cd ./meltano && meltano run tap-postgres-ascenda target-redshift
 
