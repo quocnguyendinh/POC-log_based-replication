@@ -14,6 +14,9 @@ plugins:
         '*':
           replication-method: LOG_BASED
           replication_key: _sdc_lsn
+          
+    - name: tap-postgres-clone
+      inherit_from: tap-postgres
 
     - name: tap-postgres-ascenda
       inherit_from: tap-postgres
@@ -49,7 +52,7 @@ plugins:
     variant: transferwise
     pip_url: git+https://github.com/Kaligo/pipelinewise-target-redshift.git@master
     config:
-      host: $REDSHIFT_HOST
+      host: ${REDSHIFT_HOST}
       password: ${REDSHIFT_PASSWORD}
       dbname: ${PARTNER_PLATFORM}_dev
       s3_bucket: kaligo.playground
@@ -57,12 +60,33 @@ plugins:
       aws_access_key_id: ${AWS_ACCESS_KEY_ID}
       aws_secret_access_key: ${AWS_SECRET_ACCESS_KEY}
       default_target_schema: ${DEV_SCHEMA_PREFIX}__${MELTANO_EXTRACT__LOAD_SCHEMA}
-      port: $REDSHIFT_PORT
-      user: $REDSHIFT_USER
+      port: ${REDSHIFT_PORT}
+      user: ${REDSHIFT_USER}
+      add_metadata_columns: true
+      compression: gzip
+      slices: 4  # must match `SELECT COUNT(DISTINCT slice) FROM stv_slices`
+      hard_delete: true
+  
+  - name: target-redshift-soft-delete
+    inherit_from: target-redshift
+    variant: transferwise
+    pip_url: git+https://github.com/Kaligo/pipelinewise-target-redshift.git@master
+    config:
+      host: ${REDSHIFT_HOST}
+      password: ${REDSHIFT_PASSWORD}
+      dbname: ${PARTNER_PLATFORM}_dev
+      s3_bucket: kaligo.playground
+      s3_key_prefix: ${PARTNER_PLATFORM}_warehouse/${POSTGRES_USER}/
+      aws_access_key_id: ${AWS_ACCESS_KEY_ID}
+      aws_secret_access_key: ${AWS_SECRET_ACCESS_KEY}
+      default_target_schema: ${DEV_SCHEMA_PREFIX}__${MELTANO_EXTRACT__LOAD_SCHEMA}
+      port: ${REDSHIFT_PORT}
+      user: ${REDSHIFT_USER}
       add_metadata_columns: true
       compression: gzip
       slices: 4  # must match `SELECT COUNT(DISTINCT slice) FROM stv_slices`
       hard_delete: false
+
 
 environments:
 - name: dev
@@ -99,3 +123,5 @@ environments:
       - name: target-duckdb
 
       - name: target-redshift
+      - name: target-redshift-soft-delete
+      - name: target-redshift-hard-delete

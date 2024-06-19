@@ -45,10 +45,14 @@ postgres-add-table:
 	bash ./infra/postgres/add_table.sh
 
 tap-ascenda-replicate-data:
+	sleep 60
 	cd ./meltano && meltano run tap-postgres-ascenda target-redshift
 
 tap-default-replicate-data:
 	cd ./meltano && meltano run tap-postgres target-redshift
+
+tap-cloned-default-replicate-data:
+	cd ./meltano && meltano run tap-postgres-clone target-redshift
 
 test-transaction-first-record-tap-ascenda:
 	bash ./infra/postgres/transaction_first_record.sh
@@ -111,3 +115,13 @@ test-update-column-tap-default:
 	bash ./infra/postgres/update_column.sh
 	make metlano-refresh-catalog
 	make tap-default-replicate-data
+
+test-soft-delete:
+	cd ./meltano && meltano run tap-postgres target-redshift-soft-delete
+	bash ./infra/postgres/delete_row.sh
+	cd ./meltano && meltano run tap-postgres target-redshift-soft-delete
+
+test-hard-delete:
+	cd ./meltano && meltano run tap-postgres target-redshift
+	bash ./infra/postgres/delete_row.sh
+	cd ./meltano && meltano run tap-postgres target-redshift
