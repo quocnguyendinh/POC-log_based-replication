@@ -11,7 +11,7 @@ infra-init: infra-up
 
 infra-shutdown:
 	find infra -type f -name "*duckdb*" -delete
-	cd meltano && rm -rf .meltano/meltano.db
+	cd meltano && rm -rf .meltano
 	docker-compose -f ./infra/docker-compose.yml down
 
 infra-restart:
@@ -19,6 +19,9 @@ infra-restart:
 
 connect-postgres:
 	docker exec -it log_based_postgres psql -U "meltano" -d "meltano"
+
+connect-postgres-sub-user:
+	docker exec -it log_based_postgres psql -U "meltano_postgres" -d "meltano"
 
 connect-clickhouse:
 	docker exec -it clickhouse clickhouse-client -u meltano --password meltano --database meltano
@@ -32,8 +35,13 @@ metlano-refresh-catalog:
 postgres-refresh-data:
 	bash ./infra/postgres/refresh_data.sh
 
+postgres-revoke-select-permission:
+	bash ./infra/postgres/revoke_select_permission.sh
+
+postgres-revoke-replication-permission:
+	bash ./infra/postgres/revoke_replication_permission.sh
+
 tap-ascenda-replicate-data:
-	sleep 60
 	cd ./meltano && meltano run tap-postgres-ascenda target-redshift
 
 tap-default-replicate-data:

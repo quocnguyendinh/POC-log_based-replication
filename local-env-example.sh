@@ -1,6 +1,8 @@
 export POSTGRES_USER=meltano
 export POSTGRES_PASSWORD=meltano
 export POSTGRES_DB=meltano
+export MELTANO_POSTGRES_USER=meltano_postgres
+export MELTANO_POSTGRES_PASS=meltano_postgres
 
 export CLICKHOUSE_ADMIN_USER=meltano
 export CLICKHOUSE_ADMIN_PASSWORD=meltano

@@ -1,0 +1,3 @@
+docker exec -i log_based_postgres psql -U "$POSTGRES_USER" -d "$POSTGRES_DB" << EOF
+ALTER ROLE $MELTANO_POSTGRES_USER NOREPLICATION;
+EOF

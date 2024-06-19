@@ -14,4 +14,5 @@ INSERT INTO sample (text_field, nested_json)
 VALUES
     ('cat', '{"type": "animal", "subtype": {"type": "mammal"}}'),
     ('dog', '{"type": "animal"}');
+GRANT ALL ON sample TO $MELTANO_POSTGRES_USER;
 EOF

@@ -73,16 +73,16 @@ environments:
         config:
           host: localhost
           port: 5433
-          user: meltano
-          password: meltano
+          user: meltano_postgres
+          password: meltano_postgres
           database: meltano
 
       - name: tap-postgres-ascenda
         config:
           host: localhost
           port: 5433
-          user: meltano
-          password: meltano
+          user: meltano_postgres
+          password: meltano_postgres
           dbname: meltano
 
       loaders:
